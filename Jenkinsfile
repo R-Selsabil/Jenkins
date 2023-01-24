@@ -28,21 +28,44 @@ steps {
  
 }
     }
-    stage(' deploy Mail Notification') {
+    
+    stage('test Mail Notification') {
       steps {
-        mail(subject: 'TPOGL Jenkins notification', body: mail, cc: 'js_rouibi@esi.dz' ,bcc:'js_rouibi@esi.dz')
+        mail(subject: 'TPOGL Jenkins test phase notification', body: mail, cc: 'js_rouibi@esi.dz' ,bcc:'js_rouibi@esi.dz')
       }
     }
-      stage('Slack Notification') {
-      steps {
-        slackSend(message: 'Slack vous indique que le processus est termine avec succes. ')
-      }
-      }
-        stage('Signal notification'){
-          steps{
-          notifyEvents message: 'build success', token: 'tGffxCY2W0dLrytKTLs9Y02pAeVqamkj'
+   
+     
+        stage('Code Analysis') {
+                post {
+        failure {
+          script {
+            mail= " Code Analysis termine avec echec "
+          }
+
         }
-    }
+
+        success {
+          script {
+            mail=" Code analysis termine avec succes "
+          }
+
+        }
+
+      }
+         
+          steps {
+            withSonarQubeEnv('sonar') {
+              bat 'gradle sonar'
+            }
+
+            waitForQualityGate true
+          }
+        }
+    
+    
+    
+   
 }
 
 }
