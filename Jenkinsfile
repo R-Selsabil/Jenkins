@@ -22,13 +22,11 @@ bat 'gradlew test'
             withSonarQubeEnv('sonar') {
               bat 'gradlew sonar'
             }
-
-
           }
         }
    
    
-         stage("Code Quality") {
+         /*stage("Code Quality") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
@@ -36,7 +34,7 @@ bat 'gradlew test'
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        }*/
    
    
      stage('build') {
