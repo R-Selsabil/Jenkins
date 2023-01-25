@@ -41,8 +41,8 @@ bat 'gradlew test'
      
    
       steps {
-        bat(script: 'gradle build', label: 'gradle build')
-        bat 'gradle javadoc'
+        bat(script: 'gradlew build', label: 'gradlew build')
+        bat 'gradlew javadoc'
         archiveArtifacts 'build/libs/*.jar'
         junit(testResults: 'build/reports/tests/test', allowEmptyResults: true)
        
@@ -51,7 +51,7 @@ bat 'gradlew test'
    
      stage('Deploy') {
       steps {
-        bat 'gradle publish'
+        bat 'gradlew publish'
       }
     }
    
