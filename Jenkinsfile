@@ -1,9 +1,9 @@
 pipeline {
   agent any
   stages {
+   
    stage ('Test') { // la phase build
 steps {
- 
 bat 'gradlew test'
  junit 'build/test-results/test/TEST-Matrix.xml'
  
@@ -20,7 +20,7 @@ bat 'gradlew test'
         stage('Code Analysis') {
           steps {
             withSonarQubeEnv('sonar') {
-              bat 'gradlew sonar'
+              bat 'gradle sonar'
             }
 
 
@@ -28,8 +28,6 @@ bat 'gradlew test'
         }
    
    
-    
-    
          stage("Code Quality") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
@@ -41,8 +39,45 @@ bat 'gradlew test'
         }
    
    
-    
-    
+     stage('build') {
      
+   
+      steps {
+        bat(script: 'gradle build', label: 'gradle build')
+        bat 'gradle javadoc'
+        archiveArtifacts 'build/libs/*.jar'
+        junit(testResults: 'build/reports/tests/test', allowEmptyResults: true)
+       
+      }
+    }
+   
+     stage('Deploy') {
+      steps {
+        bat 'gradle publish'
+      }
+    }
+   
+      stage(' deploy Mail Notification') {
+      steps {
+        mail(subject: 'TPOGL Jenkins notification', body: mail, cc: 'js_rouibi@esi.dz' ,bcc:'js_rouibi@esi.dz')
+      }
+    }
+      stage('Slack Notification') {
+      steps {
+        slackSend(message: 'Slack vous indique que le processus est termine avec succes. ')
+      }
+      }
+        stage('Signal notification'){
+          steps{
+          notifyEvents message: 'Signal vous indique que le processus est termine avec succes', token: 'tGffxCY2W0dLrytKTLs9Y02pAeVqamkj'
+        }
+    }
+   
+   
+   
+   
+   
+}
+ 
 
- } }
+ }
