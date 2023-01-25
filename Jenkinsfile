@@ -55,21 +55,15 @@ bat 'gradlew test'
       }
     }
    
-      stage(' deploy Mail Notification') {
+       stage('Notification') {
       steps {
-        mail(subject: 'TPOGL Jenkins notification', body: mail, cc: 'js_rouibi@esi.dz' ,bcc:'js_rouibi@esi.dz')
+       
+       notifyEvents message: 'New build is Created success', token: 'tGffxCY2W0dLrytKTLs9Y02pAeVqamkj'
+         notifyEvents message: 'New build field', token: 'tGffxCY2W0dLrytKTLs9Y02pAeVqamkj'
+
       }
     }
-      stage('Slack Notification') {
-      steps {
-        slackSend(message: 'Slack vous indique que le processus est termine avec succes. ')
-      }
-      }
-        stage('Signal notification'){
-          steps{
-          notifyEvents message: 'Signal vous indique que le processus est termine avec succes', token: 'tGffxCY2W0dLrytKTLs9Y02pAeVqamkj'
-        }
-    }
+   
    
    
    
@@ -77,5 +71,14 @@ bat 'gradlew test'
    
 }
  
+  post {
+        success {
+          mail(subject: 'Build Success', body: 'New Build is deployed !', from: 'js_rouibi@esi.dz', to: 'is_rouibi@esi.dz')
+        }
+        failure {
+          mail(subject: 'Build Failure', body: "the new build isn't deployed succesfully !", from: 'js_rouibi@esi.dz', to: 'js_rouibi@esi.dz')
+        }
+       
+      }
 
  }
