@@ -20,7 +20,7 @@ bat 'gradlew test'
         stage('Code Analysis') {
           steps {
             withSonarQubeEnv('sonar') {
-              bat 'gradle sonar'
+              bat 'gradlew sonar'
             }
 
 
